@@ -35,7 +35,6 @@ const dividerStyle: React.CSSProperties = { width: '40%' }
 const facetasBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #F4EEE3 0%, #FAF6EE 50%, #F4EEE3 100%)' }
 const despedidaBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 60%, #EDE3D2 100%)' }
 const big18Style: React.CSSProperties = { fontSize: 'clamp(8rem, 22vw, 16rem)' }
-// Hero ahora en paleta crema/dorada clara (sin negro)
 const heroBgStyle: React.CSSProperties = {
   background: 'radial-gradient(ellipse at 50% 30%, #FAF6EE 0%, #F4EEE3 45%, #EDE3D2 100%)',
 }
@@ -120,9 +119,9 @@ function VersiculoApertura() {
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t08} className="hand text-rojo text-xl mb-8 uppercase tracking-wideish">Antes que nada, Cristo</motion.p>
         <motion.div initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.8, 0.2)}>
           <p className="serif italic text-2xl md:text-4xl leading-relaxed text-marron">
-            «Levántate, oh amiga mía, hermosa mía, y ven. Porque he aquí ha pasado el invierno, se ha mudado, la lluvia se fue; se han mostrado las flores en la tierra, el tiempo de la canción ha venido, y en nuestro país se ha oído la voz de la tórtola.»
+            «Porque los montes se moverán, y los collados temblarán; pero no se apartará de ti mi misericordia, ni el pacto de mi paz se quebrantará, dijo Jehová, el que tiene misericordia de ti.»
           </p>
-          <p className="hand text-marronSuave text-lg mt-8">— Cantares 2:10–12</p>
+          <p className="hand text-marronSuave text-lg mt-8">— Isaías 54:10</p>
         </motion.div>
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.8, 0.4)} className="hand text-2xl md:text-3xl text-rojo mt-12">
           Esta es la voz con la que Dios me habló de ti.
