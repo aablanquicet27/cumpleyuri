@@ -1,10 +1,10 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
-import { ASPECTOS, GALERIA, VIDEO_18, VIERNES, SABADO, PLAN_JUNTOS, SONGS, type Aspecto, type GaleriaItem } from './data'
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { ASPECTOS, GALERIA, PLAN_JUNTOS, type Aspecto, type GaleriaItem, type PlanItem } from './data'
 
 const RAW = 'https://raw.githubusercontent.com/aablanquicet27/cumpleyuri/main/'
 const photo = (n: string) => RAW + encodeURIComponent(n)
-const AUDIO_18 = RAW + encodeURIComponent('18 - One Direction (lyrics).mp3')
+const PREVIEW_18 = RAW + encodeURIComponent('PREVIEWVIDEO.png')
 const CANVA_VIDEO = 'https://canva.link/cumpleyuri'
 
 const ease1: [number, number, number, number] = [0.22, 1, 0.36, 1]
@@ -27,13 +27,17 @@ const slideShow = { opacity: 1, x: 0 }
 const vpOnce = { once: true, amount: 0.2 } as const
 const vpMore = { once: true, amount: 0.35 } as const
 
-// === ESTILOS INLINE EXTRAIDOS (cero corrupcion de llaves) ===
+// === ESTILOS INLINE EXTRAIDOS ===
 const dividerStyle: React.CSSProperties = { width: '40%' }
+const dividerCenterStyle: React.CSSProperties = { width: '40%', marginLeft: 'auto', marginRight: 'auto' }
 const facetasBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #F4EEE3 0%, #FAF6EE 50%, #F4EEE3 100%)' }
-const soundtrackBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 100%)' }
-const hojaRutaBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #F4EEE3 0%, #FAF6EE 100%)' }
+const sectionGradStyle1: React.CSSProperties = { background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 100%)' }
 const despedidaBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 60%, #EDE3D2 100%)' }
 const big18Style: React.CSSProperties = { fontSize: 'clamp(8rem, 22vw, 16rem)' }
+const heroBgStyle: React.CSSProperties = {
+  background: 'radial-gradient(ellipse at top, #4A3A2C 0%, #2A1F18 60%, #5C0E1A 100%)',
+}
+const expandedCardStyle: React.CSSProperties = { overflow: 'hidden' }
 
 function ScrollProgress() {
   const sp = useScroll()
@@ -73,32 +77,30 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 function Hero() {
-  const ref = useRef<HTMLDivElement>(null)
-  const sp = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const yBg = useTransform(sp.scrollYProgress, [0, 1], ['0%', '30%'])
-  const opacityBg = useTransform(sp.scrollYProgress, [0, 1], [1, 0.25])
-  const bgStyle = {
-    y: yBg,
-    opacity: opacityBg,
-    backgroundImage: 'url(' + photo('BUENA PAREJA.jpg') + ')',
-  }
   return (
-    <section ref={ref} className="relative h-[100svh] min-h-[700px] w-full overflow-hidden bg-marron">
-      <motion.div style={bgStyle} className="absolute inset-0 bg-cover bg-center" />
-      <div className="absolute inset-0 bg-gradient-to-b from-marron/55 via-rojoOscuro/40 to-crema" />
+    <section className="relative h-[100svh] min-h-[700px] w-full overflow-hidden grain" style={heroBgStyle}>
       <div className="relative z-10 h-full w-full flex flex-col items-center justify-center text-center px-6">
-        <motion.div initial={fadeIn} animate={showIn} transition={mkT(1.0)} className="sello text-doradoSuave/95 border-doradoSuave/60 text-base md:text-lg mb-6 bg-marron/30 backdrop-blur-sm">22 de mayo de 2026</motion.div>
-        <motion.h1 initial={fadeUp} animate={show} transition={mkT(1.4)} className="serif text-crema text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tightish max-w-4xl drop-shadow-lg">
-          Feliz Cumpleaños,<br/><span className="italic font-light text-doradoSuave">la mejor mujer del planeta</span>
+        <motion.div initial={fadeIn} animate={showIn} transition={mkT(1.0)} className="sello text-doradoSuave/95 border-doradoSuave/60 text-base md:text-lg mb-8 bg-marron/30 backdrop-blur-sm">
+          22 de mayo de 2026
+        </motion.div>
+        <motion.div initial={fadeIn} animate={showIn} transition={mkT(0.8, 0.3)} className="mb-6">
+          <Ornament />
+        </motion.div>
+        <motion.h1 initial={fadeUp} animate={show} transition={mkT(1.4, 0.4)} className="serif text-crema text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tightish max-w-4xl drop-shadow-lg">
+          Feliz Cumpleaños,<br/>
+          <span className="italic font-light text-doradoSuave">Yuri</span>
         </motion.h1>
-        <motion.div initial={fadeIn} animate={showIn} transition={mkT(1.4, 0.6)} className="mt-12 max-w-2xl ornament-frame">
+        <motion.p initial={fadeIn} animate={showIn} transition={mkT(1.0, 0.9)} className="hand text-doradoSuave text-2xl md:text-3xl mt-6">
+          la mejor mujer del planeta
+        </motion.p>
+        <motion.div initial={fadeIn} animate={showIn} transition={mkT(1.4, 1.2)} className="mt-14 max-w-2xl ornament-frame">
           <p className="serif italic text-crema/95 text-lg md:text-2xl leading-relaxed">
             «Mujeres buenas hay muchas, pero tú eres la mejor de todas.»
           </p>
           <p className="hand text-doradoSuave text-xl mt-6">— Proverbios 31:29</p>
         </motion.div>
         <motion.div initial={fadeIn} animate={showIn} transition={mkT(1.0, 2.0)} className="absolute bottom-10 left-1/2 -translate-x-1/2">
-          <div className="flex flex-col items-center text-crema/80">
+          <div className="flex flex-col items-center text-crema/70">
             <span className="hand text-base mb-2">desliza, mi amor</span>
             <span className="text-2xl animate-bounce">↓</span>
           </div>
@@ -138,7 +140,7 @@ function FacetasIntro() {
           17 facetas<br/><span className="italic text-doradoSuave">en las que te amo</span>
         </motion.h2>
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.8, 0.2)} className="serif italic text-crema/70 text-lg md:text-xl mt-6">
-          Una foto por cada verdad. Sin inventos.
+          Una foto por cada verdad. Mis palabras, tal cual.
         </motion.p>
         <Ornament className="mt-10" />
       </div>
@@ -148,6 +150,8 @@ function FacetasIntro() {
 
 function FacetaCard({ a, idx }: { a: Aspecto; idx: number }) {
   const right = idx % 2 === 1
+  const hasText = a.texto.trim().length > 0
+  const hasCaption = a.caption.trim().length > 0
   return (
     <motion.article
       initial={fadeUp}
@@ -156,18 +160,25 @@ function FacetaCard({ a, idx }: { a: Aspecto; idx: number }) {
       transition={mkT(0.9, 0.05)}
       className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-14 items-center py-20 md:py-28"
     >
-      <div className={'md:col-span-7 ' + (right ? 'md:order-2' : '')}>
+      <div className={'md:col-span-6 ' + (right ? 'md:order-2' : '')}>
         <div className="vintage-frame mx-auto max-w-xl">
           <div className="aspect-[4/5] overflow-hidden">
             <img src={photo(a.foto)} alt={a.titulo} loading="lazy" className="w-full h-full object-cover" />
           </div>
         </div>
       </div>
-      <div className={'md:col-span-5 ' + (right ? 'md:order-1 md:text-right' : '')}>
+      <div className={'md:col-span-6 ' + (right ? 'md:order-1 md:text-right' : '')}>
         <p className="script text-doradoSuave text-5xl md:text-7xl leading-none mb-3">{a.num}</p>
         <h3 className="serif text-4xl md:text-6xl text-rojo leading-[1.05] tracking-tightish">{a.titulo}</h3>
-        <div className="divider-dorado my-6 mx-0" style={dividerStyle} />
-        <p className="hand text-marronSuave text-2xl md:text-3xl italic">{a.caption}</p>
+        {hasCaption && (
+          <>
+            <div className="divider-dorado my-6 mx-0" style={dividerStyle} />
+            <p className="hand text-marronSuave text-2xl md:text-3xl italic">{a.caption}</p>
+          </>
+        )}
+        {hasText && (
+          <p className="serif text-marronSuave text-lg md:text-xl leading-relaxed mt-6 italic">{a.texto}</p>
+        )}
       </div>
     </motion.article>
   )
@@ -200,9 +211,9 @@ function Galeria() {
   return (
     <section className="py-28 md:py-36 px-6 bg-rojoOscuro text-crema grain relative overflow-hidden">
       <div className="max-w-6xl mx-auto relative">
-        <SectionLabel>Pruebas visibles</SectionLabel>
+        <SectionLabel>Cada foto, una característica tuya</SectionLabel>
         <motion.h2 initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t08} className="serif text-4xl md:text-6xl text-crema text-center leading-tight">
-          Cada foto es <span className="italic text-doradoSuave">una verdad</span>
+          Y así te <span className="italic text-doradoSuave">veo yo</span>
         </motion.h2>
         <Ornament className="my-12" />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12">
@@ -213,139 +224,107 @@ function Galeria() {
   )
 }
 
-function SongRow({ s, i }: { s: { n: number; t: string; sub: string }; i: number }) {
-  return (
-    <motion.li initial={slideR} whileInView={slideShow} viewport={vpMore} transition={mkT(0.6, i * 0.05)} className="flex items-center gap-5 p-5 md:p-6 bg-cremaClara border border-dorado/25 hover:border-rojo/50 transition-all hover:shadow-md">
-      <span className="script text-5xl md:text-6xl text-rojo w-16 text-center leading-none">{s.n}</span>
-      <div className="flex-1">
-        <p className="serif text-2xl md:text-3xl text-marron">{s.t}</p>
-        <p className="hand text-marronSuave text-lg md:text-xl">{s.sub}</p>
-      </div>
-      {s.t === '18' && <span className="hand text-rojo text-lg">↓ esta es especial</span>}
-    </motion.li>
-  )
-}
-
-function Soundtrack() {
-  return (
-    <section className="py-28 md:py-36 px-6 grain" style={soundtrackBgStyle}>
-      <div className="max-w-4xl mx-auto">
-        <SectionLabel>Nuestro soundtrack</SectionLabel>
-        <motion.h2 initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t08} className="serif text-4xl md:text-6xl text-marron text-center leading-tight mb-4">
-          One Direction <span className="italic text-rojo">y nosotros</span>
-        </motion.h2>
-        <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.8, 0.2)} className="serif italic text-marronSuave text-center text-lg max-w-2xl mx-auto">
-          Diez canciones que cuentan nuestra historia, en orden.
-        </motion.p>
-        <Ornament className="my-12" />
-        <ol className="space-y-3 md:space-y-4">
-          {SONGS.map((s, i) => <SongRow key={s.n} s={s} i={i} />)}
-        </ol>
-      </div>
-    </section>
-  )
-}
-
-function Lyric18Row({ v, i }: { v: GaleriaItem; i: number }) {
-  const isRight = i % 2 === 1
-  return (
-    <motion.div initial={fadeUp} whileInView={show} viewport={vpMore} transition={mkT(0.8, i * 0.08)} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-      <div className={'vintage-frame ' + (isRight ? 'md:order-2' : '')}>
-        <div className="aspect-[4/5] overflow-hidden">
-          <img src={photo(v.foto)} alt={v.caption} loading="lazy" className="w-full h-full object-cover" />
-        </div>
-      </div>
-      <p className={'dance text-3xl md:text-5xl text-doradoSuave leading-snug ' + (isRight ? 'md:order-1 md:text-right' : '')}>
-        {v.caption}
-      </p>
-    </motion.div>
-  )
-}
-
-function Cancion18() {
+function Cancion18Preview() {
   return (
     <section className="relative py-28 md:py-36 px-6 bg-marron text-crema overflow-hidden grain">
-      <div className="absolute inset-0 opacity-15">
-        <img src={photo('DESDE TENIAMOS 18.jpg')} alt="" className="w-full h-full object-cover" />
-      </div>
-      <div className="absolute inset-0 bg-marron/75" />
-      <div className="relative max-w-4xl mx-auto">
-        <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t06} className="hand text-doradoSuave text-lg uppercase tracking-wideish text-center mb-4">Nuestra versión de</motion.p>
-        <motion.h2 initial={scaleIn} whileInView={scaleShow} viewport={vpOnce} transition={t10} className="script text-rojo text-center leading-none" style={big18Style}>18</motion.h2>
-        <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.6, 0.2)} className="serif italic text-center text-crema/85 text-xl mt-6 max-w-2xl mx-auto">
-          Yo hice nuestro propio video con esta canción. Vívelo ahora. Súbele al volumen.
+      <div className="relative max-w-4xl mx-auto text-center">
+        <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t06} className="hand text-doradoSuave text-lg uppercase tracking-wideish mb-4">Nuestra versión de</motion.p>
+        <motion.h2 initial={scaleIn} whileInView={scaleShow} viewport={vpOnce} transition={t10} className="script text-rojo leading-none" style={big18Style}>18</motion.h2>
+        <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.6, 0.2)} className="serif italic text-crema/85 text-xl mt-4 max-w-2xl mx-auto">
+          Desde que teníamos 18. Te hice un video. Dále click y vívelo.
         </motion.p>
-        <motion.div initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.8, 0.4)} className="mt-12 max-w-2xl mx-auto">
-          <p className="hand text-doradoSuave text-center text-base mb-3">la canción original ↓</p>
-          <audio controls className="w-full" preload="metadata">
-            <source src={AUDIO_18} type="audio/mpeg" />
-          </audio>
-        </motion.div>
-        <motion.div initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.8, 0.5)} className="mt-16 max-w-3xl mx-auto">
-          <p className="hand text-doradoSuave text-center text-base mb-3">nuestro video ↓</p>
-          <div className="aspect-video border-2 border-doradoSuave/40 overflow-hidden bg-marronSuave/20 shadow-2xl">
-            <iframe
-              src={CANVA_VIDEO}
-              className="w-full h-full"
-              allow="fullscreen; autoplay; encrypted-media"
-              allowFullScreen
-              loading="lazy"
-              title="Nuestra versión de 18"
-            />
-          </div>
-        </motion.div>
-        <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.6, 0.7)} className="text-center mt-5">
-          <a href={CANVA_VIDEO} target="_blank" rel="noopener noreferrer" className="hand text-doradoSuave hover:text-crema text-lg underline underline-offset-4">
-            si no carga aquí, ábrelo en pantalla completa ↗
-          </a>
-        </motion.p>
-        <Ornament className="my-20" />
-        <div className="space-y-16">
-          {VIDEO_18.map((v, i) => <Lyric18Row key={i} v={v} i={i} />)}
-        </div>
-        <motion.p initial={fadeIn} whileInView={showIn} viewport={vpOnce} transition={t10} className="hand text-crema/80 text-center text-xl md:text-2xl mt-20">
-          Quiero amarte así. Desde los 18. Hasta los 80.
-        </motion.p>
-      </div>
-    </section>
-  )
-}
-
-function TimelineItem({ item, i }: { item: { hora: string; titulo: string; texto: string }; i: number }) {
-  return (
-    <motion.div initial={slideR} whileInView={slideShow} viewport={vpMore} transition={mkT(0.6, i * 0.06)} className="relative pl-10 pb-10 border-l-2 border-dorado/40 last:border-l-transparent">
-      <span className="absolute left-[-9px] top-1 w-4 h-4 rounded-full bg-rojo ring-4 ring-crema" />
-      <p className="hand text-rojo text-2xl mb-1">{item.hora}</p>
-      <h4 className="serif text-2xl md:text-3xl text-marron">{item.titulo}</h4>
-      <p className="serif italic text-marronSuave text-base md:text-lg mt-1">{item.texto}</p>
-    </motion.div>
-  )
-}
-
-function HojaRuta() {
-  return (
-    <section className="py-28 md:py-36 px-6 grain" style={hojaRutaBgStyle}>
-      <div className="max-w-3xl mx-auto">
-        <SectionLabel>Hoja de ruta</SectionLabel>
-        <motion.h2 initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t08} className="serif text-4xl md:text-6xl text-marron text-center leading-tight">
-          Lo que <span className="italic text-rojo">vamos a vivir</span>
-        </motion.h2>
         <Ornament className="my-12" />
-        <h3 className="script text-rojo text-5xl mb-8">Viernes 22</h3>
-        <div>{VIERNES.map((v, i) => <TimelineItem key={i} item={v} i={i} />)}</div>
-        <h3 className="script text-rojo text-5xl mt-12 mb-8">Sábado 23</h3>
-        <div>{SABADO.map((v, i) => <TimelineItem key={i} item={v} i={i} />)}</div>
+        <motion.a
+          href={CANVA_VIDEO}
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={scaleIn}
+          whileInView={scaleShow}
+          viewport={vpOnce}
+          transition={mkT(0.9, 0.3)}
+          whileHover= scale: 1.02 
+          className="block max-w-3xl mx-auto group cursor-pointer"
+        >
+          <div className="vintage-frame relative">
+            <div className="aspect-video overflow-hidden relative">
+              <img src={PREVIEW_18} alt="Desde que teníamos 18 — video" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-marron/0 group-hover:bg-marron/20 transition-all flex items-center justify-center">
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-crema/90 group-hover:bg-crema flex items-center justify-center shadow-2xl transition-all">
+                  <span className="text-rojo text-3xl md:text-4xl ml-2">▶</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p className="hand text-doradoSuave text-2xl md:text-3xl mt-6 group-hover:text-crema transition-all">
+            18 · One Direction
+          </p>
+          <p className="serif italic text-crema/60 text-base mt-2 underline underline-offset-4">
+            click para abrir el video ↗
+          </p>
+        </motion.a>
       </div>
     </section>
   )
 }
 
-function PlanCard({ p, i }: { p: { emoji: string; titulo: string; texto: string }; i: number }) {
+function PlanCard({ p, i }: { p: PlanItem; i: number }) {
+  const [open, setOpen] = useState(false)
+  const hasDetail = (p.pasos && p.pasos.length > 0) || (p.texto && p.texto.length > 0)
   return (
-    <motion.div initial={fadeUp} whileInView={show} viewport={vpMore} transition={mkT(0.6, i * 0.06)} className="bg-cremaClara border border-dorado/25 p-8 hover:border-rojo/40 hover:shadow-lg transition-all">
-      <p className="text-5xl mb-4">{p.emoji}</p>
-      <h4 className="serif text-2xl md:text-3xl text-rojo mb-2">{p.titulo}</h4>
-      <p className="serif italic text-marronSuave text-lg">{p.texto}</p>
+    <motion.div
+      initial={fadeUp}
+      whileInView={show}
+      viewport={vpMore}
+      transition={mkT(0.6, i * 0.06)}
+      className="bg-cremaClara border border-dorado/25 hover:border-rojo/40 hover:shadow-lg transition-all"
+    >
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full text-left p-7 md:p-8 flex items-start justify-between gap-4 group"
+      >
+        <div className="flex-1">
+          <h4 className="serif text-2xl md:text-3xl text-rojo mb-1 group-hover:text-rojoOscuro transition-colors">{p.titulo}</h4>
+          <p className="serif italic text-marronSuave text-base md:text-lg">{p.resumen}</p>
+        </div>
+        {hasDetail && (
+          <motion.span
+            animate= rotate: open ? 45 : 0 
+            transition={mkT(0.3)}
+            className="text-dorado text-3xl leading-none shrink-0"
+          >
+            +
+          </motion.span>
+        )}
+      </button>
+      <AnimatePresence initial={false}>
+        {open && hasDetail && (
+          <motion.div
+            key="detail"
+            initial= height: 0, opacity: 0 
+            animate= height: 'auto', opacity: 1 
+            exit= height: 0, opacity: 0 
+            transition={mkT(0.4)}
+            style={expandedCardStyle}
+          >
+            <div className="px-7 pb-7 md:px-8 md:pb-8 border-t border-dorado/20 pt-5">
+              {p.texto && (
+                <p className="serif italic text-marronSuave text-base md:text-lg leading-relaxed">{p.texto}</p>
+              )}
+              {p.pasos && (
+                <ol className="space-y-2 list-none">
+                  {p.pasos.map((paso, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <span className="script text-rojo text-2xl leading-none shrink-0 w-7">{idx + 1}</span>
+                      <span className="serif text-marron text-base md:text-lg pt-1">{paso}</span>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }
@@ -354,15 +333,18 @@ function PlanCompartido() {
   return (
     <section className="py-28 md:py-36 px-6 bg-marron text-crema grain">
       <div className="max-w-5xl mx-auto">
-        <SectionLabel>Plan compartido</SectionLabel>
+        <SectionLabel>Lo que vamos a hacer juntos</SectionLabel>
         <motion.h2 initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t08} className="serif text-4xl md:text-6xl text-crema text-center leading-tight">
-          Lo que vamos a hacer <span className="italic text-doradoSuave">juntos</span>
+          Plan <span className="italic text-doradoSuave">compartido</span>
         </motion.h2>
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.8, 0.2)} className="serif italic text-crema/70 text-center text-lg mt-6 max-w-2xl mx-auto">
           Tu lenguaje de amor es tiempo de calidad. Tu regalo es estar.
         </motion.p>
+        <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.6, 0.4)} className="hand text-doradoSuave text-center text-base mt-4">
+          — click en cada tarjeta para abrir —
+        </motion.p>
         <Ornament className="my-12" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {PLAN_JUNTOS.map((p, i) => <PlanCard key={i} p={p} i={i} />)}
         </div>
       </div>
@@ -428,12 +410,16 @@ export default function App() {
       <FacetasIntro />
       <Facetas />
       <Galeria />
-      <Soundtrack />
-      <Cancion18 />
-      <HojaRuta />
+      <Cancion18Preview />
       <PlanCompartido />
       <CierreEspiritual />
       <Despedida />
     </main>
   )
 }
+
+// referencia silenciada
+void sectionGradStyle1
+void dividerCenterStyle
+void slideR
+void slideShow
