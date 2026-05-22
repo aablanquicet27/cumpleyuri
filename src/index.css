@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { scroll-behavior: smooth; }
+html, body { background: #F4EEE3; color: #2A1F18; }
+body {
+  font-family: 'EB Garamond', serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern','liga','calt';
+  letter-spacing: -0.005em;
+}
+
+::selection { background: #8B1E2D; color: #F4EEE3; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #F4EEE3; }
+::-webkit-scrollbar-thumb { background: #B58B4A; border-radius: 3px; }
+
+.serif { font-family: 'Cormorant Garamond', serif; }
+.hand { font-family: 'Caveat', cursive; }
+.script { font-family: 'Allura', cursive; }
+.dance { font-family: 'Dancing Script', cursive; }
+
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(#2A1F18 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+.text-stroke-rojo {
+  -webkit-text-stroke: 1px #8B1E2D;
+  color: transparent;
+}
+
+.divider-dorado {
+  display: inline-block;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #B58B4A, transparent);
+}
+
+.img-frame {
+  box-shadow: 0 20px 40px -20px rgba(42,31,24,0.35), 0 8px 16px -8px rgba(42,31,24,0.2);
+}
