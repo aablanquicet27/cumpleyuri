@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { ASPECTOS, GALERIA, PLAN_JUNTOS, type Aspecto, type GaleriaItem, type PlanItem } from './data'
 
@@ -21,38 +21,39 @@ const fadeIn = { opacity: 0 }
 const showIn = { opacity: 1 }
 const scaleIn = { opacity: 0, scale: 0.96 }
 const scaleShow = { opacity: 1, scale: 1 }
-const slideR = { opacity: 0, x: -50 }
-const slideShow = { opacity: 1, x: 0 }
 
 const vpOnce = { once: true, amount: 0.2 } as const
 const vpMore = { once: true, amount: 0.35 } as const
 
-// === ESTILOS INLINE EXTRAIDOS ===
+// motion variants para hover y expand
+const hoverScale = { scale: 1.02 }
+const collapsedV = { height: 0, opacity: 0 }
+const expandedV = { height: 'auto' as const, opacity: 1 }
+const rotPlus = { rotate: 45 }
+const rotZero = { rotate: 0 }
+
+// estilos inline (CSSProperties)
 const dividerStyle: React.CSSProperties = { width: '40%' }
-const dividerCenterStyle: React.CSSProperties = { width: '40%', marginLeft: 'auto', marginRight: 'auto' }
 const facetasBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #F4EEE3 0%, #FAF6EE 50%, #F4EEE3 100%)' }
-const sectionGradStyle1: React.CSSProperties = { background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 100%)' }
 const despedidaBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 60%, #EDE3D2 100%)' }
 const big18Style: React.CSSProperties = { fontSize: 'clamp(8rem, 22vw, 16rem)' }
-const heroBgStyle: React.CSSProperties = {
-  background: 'radial-gradient(ellipse at top, #4A3A2C 0%, #2A1F18 60%, #5C0E1A 100%)',
-}
+const heroBgStyle: React.CSSProperties = { background: 'radial-gradient(ellipse at top, #4A3A2C 0%, #2A1F18 60%, #5C0E1A 100%)' }
 const expandedCardStyle: React.CSSProperties = { overflow: 'hidden' }
+const scrollBarStyleBase: React.CSSProperties = {
+  transformOrigin: '0%',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  height: '3px',
+  background: '#8B1E2D',
+  zIndex: 50,
+}
 
 function ScrollProgress() {
   const sp = useScroll()
   const sx: MotionValue<number> = useTransform(sp.scrollYProgress, [0, 1], [0, 1])
-  const style = {
-    transformOrigin: '0%',
-    position: 'fixed' as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '3px',
-    background: '#8B1E2D',
-    zIndex: 50,
-    scaleX: sx,
-  }
+  const style = Object.assign({}, scrollBarStyleBase, { scaleX: sx })
   return <motion.div style={style} />
 }
 
@@ -242,7 +243,7 @@ function Cancion18Preview() {
           whileInView={scaleShow}
           viewport={vpOnce}
           transition={mkT(0.9, 0.3)}
-          whileHover= scale: 1.02 
+          whileHover={hoverScale}
           className="block max-w-3xl mx-auto group cursor-pointer"
         >
           <div className="vintage-frame relative">
@@ -270,6 +271,7 @@ function Cancion18Preview() {
 function PlanCard({ p, i }: { p: PlanItem; i: number }) {
   const [open, setOpen] = useState(false)
   const hasDetail = (p.pasos && p.pasos.length > 0) || (p.texto && p.texto.length > 0)
+  const plusAnim = open ? rotPlus : rotZero
   return (
     <motion.div
       initial={fadeUp}
@@ -289,7 +291,7 @@ function PlanCard({ p, i }: { p: PlanItem; i: number }) {
         </div>
         {hasDetail && (
           <motion.span
-            animate= rotate: open ? 45 : 0 
+            animate={plusAnim}
             transition={mkT(0.3)}
             className="text-dorado text-3xl leading-none shrink-0"
           >
@@ -301,9 +303,9 @@ function PlanCard({ p, i }: { p: PlanItem; i: number }) {
         {open && hasDetail && (
           <motion.div
             key="detail"
-            initial= height: 0, opacity: 0 
-            animate= height: 'auto', opacity: 1 
-            exit= height: 0, opacity: 0 
+            initial={collapsedV}
+            animate={expandedV}
+            exit={collapsedV}
             transition={mkT(0.4)}
             style={expandedCardStyle}
           >
@@ -417,9 +419,3 @@ export default function App() {
     </main>
   )
 }
-
-// referencia silenciada
-void sectionGradStyle1
-void dividerCenterStyle
-void slideR
-void slideShow
