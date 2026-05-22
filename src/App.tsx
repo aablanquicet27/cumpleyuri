@@ -25,19 +25,20 @@ const scaleShow = { opacity: 1, scale: 1 }
 const vpOnce = { once: true, amount: 0.2 } as const
 const vpMore = { once: true, amount: 0.35 } as const
 
-// motion variants para hover y expand
 const hoverScale = { scale: 1.02 }
 const collapsedV = { height: 0, opacity: 0 }
 const expandedV = { height: 'auto' as const, opacity: 1 }
 const rotPlus = { rotate: 45 }
 const rotZero = { rotate: 0 }
 
-// estilos inline (CSSProperties)
 const dividerStyle: React.CSSProperties = { width: '40%' }
 const facetasBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #F4EEE3 0%, #FAF6EE 50%, #F4EEE3 100%)' }
 const despedidaBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 60%, #EDE3D2 100%)' }
 const big18Style: React.CSSProperties = { fontSize: 'clamp(8rem, 22vw, 16rem)' }
-const heroBgStyle: React.CSSProperties = { background: 'radial-gradient(ellipse at top, #4A3A2C 0%, #2A1F18 60%, #5C0E1A 100%)' }
+// Hero ahora en paleta crema/dorada clara (sin negro)
+const heroBgStyle: React.CSSProperties = {
+  background: 'radial-gradient(ellipse at 50% 30%, #FAF6EE 0%, #F4EEE3 45%, #EDE3D2 100%)',
+}
 const expandedCardStyle: React.CSSProperties = { overflow: 'hidden' }
 const scrollBarStyleBase: React.CSSProperties = {
   transformOrigin: '0%',
@@ -81,27 +82,27 @@ function Hero() {
   return (
     <section className="relative h-[100svh] min-h-[700px] w-full overflow-hidden grain" style={heroBgStyle}>
       <div className="relative z-10 h-full w-full flex flex-col items-center justify-center text-center px-6">
-        <motion.div initial={fadeIn} animate={showIn} transition={mkT(1.0)} className="sello text-doradoSuave/95 border-doradoSuave/60 text-base md:text-lg mb-8 bg-marron/30 backdrop-blur-sm">
+        <motion.div initial={fadeIn} animate={showIn} transition={mkT(1.0)} className="sello text-base md:text-lg mb-8">
           22 de mayo de 2026
         </motion.div>
         <motion.div initial={fadeIn} animate={showIn} transition={mkT(0.8, 0.3)} className="mb-6">
           <Ornament />
         </motion.div>
-        <motion.h1 initial={fadeUp} animate={show} transition={mkT(1.4, 0.4)} className="serif text-crema text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tightish max-w-4xl drop-shadow-lg">
+        <motion.h1 initial={fadeUp} animate={show} transition={mkT(1.4, 0.4)} className="serif text-rojo text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tightish max-w-4xl">
           Feliz Cumpleaños,<br/>
-          <span className="italic font-light text-doradoSuave">Yuri</span>
+          <span className="italic font-light text-marronSuave">Yuri</span>
         </motion.h1>
-        <motion.p initial={fadeIn} animate={showIn} transition={mkT(1.0, 0.9)} className="hand text-doradoSuave text-2xl md:text-3xl mt-6">
+        <motion.p initial={fadeIn} animate={showIn} transition={mkT(1.0, 0.9)} className="hand text-rojo text-2xl md:text-3xl mt-6">
           la mejor mujer del planeta
         </motion.p>
         <motion.div initial={fadeIn} animate={showIn} transition={mkT(1.4, 1.2)} className="mt-14 max-w-2xl ornament-frame">
-          <p className="serif italic text-crema/95 text-lg md:text-2xl leading-relaxed">
+          <p className="serif italic text-marron text-lg md:text-2xl leading-relaxed">
             «Mujeres buenas hay muchas, pero tú eres la mejor de todas.»
           </p>
-          <p className="hand text-doradoSuave text-xl mt-6">— Proverbios 31:29</p>
+          <p className="hand text-rojo text-xl mt-6">— Proverbios 31:29</p>
         </motion.div>
         <motion.div initial={fadeIn} animate={showIn} transition={mkT(1.0, 2.0)} className="absolute bottom-10 left-1/2 -translate-x-1/2">
-          <div className="flex flex-col items-center text-crema/70">
+          <div className="flex flex-col items-center text-marronSuave/80">
             <span className="hand text-base mb-2">desliza, mi amor</span>
             <span className="text-2xl animate-bounce">↓</span>
           </div>
