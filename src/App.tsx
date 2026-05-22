@@ -5,6 +5,7 @@ import { ASPECTOS, GALERIA, VIDEO_18, VIERNES, SABADO, PLAN_JUNTOS, SONGS, type 
 const RAW = 'https://raw.githubusercontent.com/aablanquicet27/cumpleyuri/main/'
 const photo = (n: string) => RAW + encodeURIComponent(n)
 const AUDIO_18 = RAW + encodeURIComponent('18 - One Direction (lyrics).mp3')
+const CANVA_VIDEO = 'https://canva.link/cumpleyuri'
 
 const ease1: any = [0.22, 1, 0.36, 1]
 const mkT = (duration: number, delay: number = 0) => ({ duration, delay, ease: ease1 })
@@ -233,6 +234,7 @@ function Soundtrack() {
 const t18Sub = mkT(0.6, 0.2)
 const t18Audio = mkT(0.8, 0.4)
 const t18Video = mkT(0.8, 0.5)
+const t18Link = mkT(0.6, 0.7)
 
 function Lyric18Row({ v, i }: { v: GaleriaItem; i: number }) {
   const t = mkT(0.8, i * 0.08)
@@ -260,22 +262,33 @@ function Cancion18() {
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t06} className="hand text-doradoSuave text-lg uppercase tracking-wideish text-center mb-4">Nuestra versión de</motion.p>
         <motion.h2 initial={scaleIn} whileInView={scaleShow} viewport={vpOnce} transition={t10} className="serif text-7xl md:text-9xl text-rojo text-center leading-none">18</motion.h2>
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t18Sub} className="serif italic text-center text-crema/80 text-xl mt-6 max-w-2xl mx-auto">
-          Yo hice nuestro propio video con esta canción. Cuando lo tengas listo, vívelo aquí. Mientras tanto, escúchala.
+          Yo hice nuestro propio video con esta canción. Vívelo ahora. Súbele al volumen, mi amor.
         </motion.p>
         <motion.div initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t18Audio} className="mt-12 max-w-2xl mx-auto">
+          <p className="hand text-doradoSuave text-center text-base mb-3">la canción original ↓</p>
           <audio controls className="w-full" preload="metadata">
             <source src={AUDIO_18} type="audio/mpeg" />
           </audio>
         </motion.div>
-        <motion.div initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t18Video} className="mt-12 max-w-3xl mx-auto">
-          <div className="aspect-video bg-marronSuave/40 border border-doradoSuave/30 flex items-center justify-center text-center p-8">
-            <div>
-              <p className="hand text-doradoSuave text-2xl mb-2">Aquí va nuestro video</p>
-              <p className="serif italic text-crema/60 text-sm">— pegar embed de Canva o link directo —</p>
-            </div>
+        <motion.div initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t18Video} className="mt-16 max-w-3xl mx-auto">
+          <p className="hand text-doradoSuave text-center text-base mb-3">nuestro video ↓</p>
+          <div className="aspect-video border border-doradoSuave/30 overflow-hidden bg-marronSuave/20 shadow-2xl">
+            <iframe
+              src={CANVA_VIDEO}
+              className="w-full h-full"
+              allow="fullscreen; autoplay; encrypted-media"
+              allowFullScreen
+              loading="lazy"
+              title="Nuestra versión de 18 - Yuri y Armando"
+            />
           </div>
         </motion.div>
-        <div className="mt-20 space-y-12">
+        <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t18Link} className="text-center mt-5">
+          <a href={CANVA_VIDEO} target="_blank" rel="noopener noreferrer" className="hand text-doradoSuave hover:text-crema text-lg underline underline-offset-4">
+            si no carga aquí, ábrelo en pantalla completa ↗
+          </a>
+        </motion.p>
+        <div className="mt-24 space-y-12">
           {VIDEO_18.map((v, i) => <Lyric18Row key={i} v={v} i={i} />)}
         </div>
         <motion.p initial={fadeIn} whileInView={showIn} viewport={vpOnce} transition={t10} className="hand text-crema/70 text-center text-lg mt-16">
