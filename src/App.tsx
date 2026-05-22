@@ -4,8 +4,8 @@ import { ASPECTOS, GALERIA, PLAN_JUNTOS, type Aspecto, type GaleriaItem, type Pl
 
 const RAW = 'https://raw.githubusercontent.com/aablanquicet27/cumpleyuri/main/'
 const photo = (n: string) => RAW + encodeURIComponent(n)
-const PREVIEW_18 = RAW + encodeURIComponent('PREVIEWVIDEO.png')
-const CANVA_VIDEO = 'https://canva.link/cumpleyuri'
+const CANVA_EMBED_SRC = 'https://www.canva.com/design/DAHKVl4WeBU/xVwLGKmqywBkJRzxCc3inw/watch?embed'
+const CANVA_OPEN_URL = 'https://www.canva.com/design/DAHKVl4WeBU/xVwLGKmqywBkJRzxCc3inw/watch'
 
 const ease1: [number, number, number, number] = [0.22, 1, 0.36, 1]
 const mkT = (duration: number, delay: number = 0) => ({ duration, delay, ease: ease1 })
@@ -25,7 +25,6 @@ const scaleShow = { opacity: 1, scale: 1 }
 const vpOnce = { once: true, amount: 0.2 } as const
 const vpMore = { once: true, amount: 0.35 } as const
 
-const hoverScale = { scale: 1.02 }
 const collapsedV = { height: 0, opacity: 0 }
 const expandedV = { height: 'auto' as const, opacity: 1 }
 const rotPlus = { rotate: 45 }
@@ -48,6 +47,27 @@ const scrollBarStyleBase: React.CSSProperties = {
   height: '3px',
   background: '#8B1E2D',
   zIndex: 50,
+}
+
+// Canva iframe wrapper (mantiene aspect-ratio 16:9 con padding-top trick)
+const canvaWrapStyle: React.CSSProperties = {
+  position: 'relative',
+  width: '100%',
+  height: 0,
+  paddingTop: '56.25%',
+  overflow: 'hidden',
+  borderRadius: '8px',
+  boxShadow: '0 12px 40px rgba(42, 31, 24, 0.35)',
+}
+const canvaIframeStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  border: 'none',
+  padding: 0,
+  margin: 0,
 }
 
 function ScrollProgress() {
@@ -225,44 +245,45 @@ function Galeria() {
   )
 }
 
-function Cancion18Preview() {
+function Cancion18Embed() {
   return (
     <section className="relative py-28 md:py-36 px-6 bg-marron text-crema overflow-hidden grain">
       <div className="relative max-w-4xl mx-auto text-center">
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t06} className="hand text-doradoSuave text-lg uppercase tracking-wideish mb-4">Nuestra versión de</motion.p>
         <motion.h2 initial={scaleIn} whileInView={scaleShow} viewport={vpOnce} transition={t10} className="script text-rojo leading-none" style={big18Style}>18</motion.h2>
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.6, 0.2)} className="serif italic text-crema/85 text-xl mt-4 max-w-2xl mx-auto">
-          Desde que teníamos 18. Te hice un video. Dále click y vívelo.
+          Desde que teníamos 18. Te hice un video. Dále play.
         </motion.p>
         <Ornament className="my-12" />
-        <motion.a
-          href={CANVA_VIDEO}
-          target="_blank"
-          rel="noopener noreferrer"
+        <motion.div
           initial={scaleIn}
           whileInView={scaleShow}
           viewport={vpOnce}
           transition={mkT(0.9, 0.3)}
-          whileHover={hoverScale}
-          className="block max-w-3xl mx-auto group cursor-pointer"
+          className="max-w-3xl mx-auto"
         >
-          <div className="vintage-frame relative">
-            <div className="aspect-video overflow-hidden relative">
-              <img src={PREVIEW_18} alt="Desde que teníamos 18 — video" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-marron/0 group-hover:bg-marron/20 transition-all flex items-center justify-center">
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-crema/90 group-hover:bg-crema flex items-center justify-center shadow-2xl transition-all">
-                  <span className="text-rojo text-3xl md:text-4xl ml-2">▶</span>
-                </div>
-              </div>
-            </div>
+          <div style={canvaWrapStyle}>
+            <iframe
+              src={CANVA_EMBED_SRC}
+              style={canvaIframeStyle}
+              loading="lazy"
+              allowFullScreen
+              allow="fullscreen"
+              title="Desde que teníamos 18"
+            />
           </div>
-          <p className="hand text-doradoSuave text-2xl md:text-3xl mt-6 group-hover:text-crema transition-all">
+          <p className="hand text-doradoSuave text-2xl md:text-3xl mt-8">
             18 · One Direction
           </p>
-          <p className="serif italic text-crema/60 text-base mt-2 underline underline-offset-4">
-            click para abrir el video ↗
-          </p>
-        </motion.a>
+          <a
+            href={CANVA_OPEN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="serif italic text-crema/60 hover:text-crema text-base mt-2 inline-block underline underline-offset-4"
+          >
+            abrir en Canva ↗
+          </a>
+        </motion.div>
       </div>
     </section>
   )
@@ -412,7 +433,7 @@ export default function App() {
       <FacetasIntro />
       <Facetas />
       <Galeria />
-      <Cancion18Preview />
+      <Cancion18Embed />
       <PlanCompartido />
       <CierreEspiritual />
       <Despedida />
