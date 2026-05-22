@@ -22,11 +22,18 @@ const showIn = { opacity: 1 }
 const scaleIn = { opacity: 0, scale: 0.96 }
 const scaleShow = { opacity: 1, scale: 1 }
 const slideR = { opacity: 0, x: -50 }
-const slideL = { opacity: 0, x: 50 }
 const slideShow = { opacity: 1, x: 0 }
 
 const vpOnce = { once: true, amount: 0.2 } as const
 const vpMore = { once: true, amount: 0.35 } as const
+
+// === ESTILOS INLINE EXTRAIDOS (cero corrupcion de llaves) ===
+const dividerStyle: React.CSSProperties = { width: '40%' }
+const facetasBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #F4EEE3 0%, #FAF6EE 50%, #F4EEE3 100%)' }
+const soundtrackBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 100%)' }
+const hojaRutaBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #F4EEE3 0%, #FAF6EE 100%)' }
+const despedidaBgStyle: React.CSSProperties = { background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 60%, #EDE3D2 100%)' }
+const big18Style: React.CSSProperties = { fontSize: 'clamp(8rem, 22vw, 16rem)' }
 
 function ScrollProgress() {
   const sp = useScroll()
@@ -159,7 +166,7 @@ function FacetaCard({ a, idx }: { a: Aspecto; idx: number }) {
       <div className={'md:col-span-5 ' + (right ? 'md:order-1 md:text-right' : '')}>
         <p className="script text-doradoSuave text-5xl md:text-7xl leading-none mb-3">{a.num}</p>
         <h3 className="serif text-4xl md:text-6xl text-rojo leading-[1.05] tracking-tightish">{a.titulo}</h3>
-        <div className="divider-dorado my-6 mx-0" style= width: '40%'  />
+        <div className="divider-dorado my-6 mx-0" style={dividerStyle} />
         <p className="hand text-marronSuave text-2xl md:text-3xl italic">{a.caption}</p>
       </div>
     </motion.article>
@@ -168,7 +175,7 @@ function FacetaCard({ a, idx }: { a: Aspecto; idx: number }) {
 
 function Facetas() {
   return (
-    <section className="px-6 grain" style= background: 'linear-gradient(180deg, #F4EEE3 0%, #FAF6EE 50%, #F4EEE3 100%)' >
+    <section className="px-6 grain" style={facetasBgStyle}>
       <div className="max-w-6xl mx-auto divide-y divide-dorado/15">
         {ASPECTOS.map((a, i) => <FacetaCard key={a.num} a={a} idx={i} />)}
       </div>
@@ -178,7 +185,7 @@ function Facetas() {
 
 function GaleriaItemCard({ g, i }: { g: GaleriaItem; i: number }) {
   const rotDeg = (i % 5 === 0 ? -2.5 : i % 5 === 1 ? 1.8 : i % 5 === 2 ? -1 : i % 5 === 3 ? 2.2 : 0.5)
-  const rotStyle = { transform: 'rotate(' + rotDeg + 'deg)' }
+  const rotStyle: React.CSSProperties = { transform: 'rotate(' + rotDeg + 'deg)' }
   return (
     <motion.div initial={scaleIn} whileInView={scaleShow} viewport={vpMore} transition={mkT(0.6, i * 0.04)} style={rotStyle} className="vintage-frame">
       <div className="aspect-[4/5] overflow-hidden">
@@ -221,7 +228,7 @@ function SongRow({ s, i }: { s: { n: number; t: string; sub: string }; i: number
 
 function Soundtrack() {
   return (
-    <section className="py-28 md:py-36 px-6 grain" style= background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 100%)' >
+    <section className="py-28 md:py-36 px-6 grain" style={soundtrackBgStyle}>
       <div className="max-w-4xl mx-auto">
         <SectionLabel>Nuestro soundtrack</SectionLabel>
         <motion.h2 initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t08} className="serif text-4xl md:text-6xl text-marron text-center leading-tight mb-4">
@@ -264,7 +271,7 @@ function Cancion18() {
       <div className="absolute inset-0 bg-marron/75" />
       <div className="relative max-w-4xl mx-auto">
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t06} className="hand text-doradoSuave text-lg uppercase tracking-wideish text-center mb-4">Nuestra versión de</motion.p>
-        <motion.h2 initial={scaleIn} whileInView={scaleShow} viewport={vpOnce} transition={t10} className="script text-rojo text-center leading-none" style= fontSize: 'clamp(8rem, 22vw, 16rem)' >18</motion.h2>
+        <motion.h2 initial={scaleIn} whileInView={scaleShow} viewport={vpOnce} transition={t10} className="script text-rojo text-center leading-none" style={big18Style}>18</motion.h2>
         <motion.p initial={fadeUp} whileInView={show} viewport={vpOnce} transition={mkT(0.6, 0.2)} className="serif italic text-center text-crema/85 text-xl mt-6 max-w-2xl mx-auto">
           Yo hice nuestro propio video con esta canción. Vívelo ahora. Súbele al volumen.
         </motion.p>
@@ -317,7 +324,7 @@ function TimelineItem({ item, i }: { item: { hora: string; titulo: string; texto
 
 function HojaRuta() {
   return (
-    <section className="py-28 md:py-36 px-6 grain" style= background: 'linear-gradient(180deg, #F4EEE3 0%, #FAF6EE 100%)' >
+    <section className="py-28 md:py-36 px-6 grain" style={hojaRutaBgStyle}>
       <div className="max-w-3xl mx-auto">
         <SectionLabel>Hoja de ruta</SectionLabel>
         <motion.h2 initial={fadeUp} whileInView={show} viewport={vpOnce} transition={t08} className="serif text-4xl md:text-6xl text-marron text-center leading-tight">
@@ -387,7 +394,7 @@ function CierreEspiritual() {
 
 function Despedida() {
   return (
-    <section className="relative min-h-[100svh] py-28 md:py-36 px-6 grain" style= background: 'linear-gradient(180deg, #FAF6EE 0%, #F4EEE3 60%, #EDE3D2 100%)' >
+    <section className="relative min-h-[100svh] py-28 md:py-36 px-6 grain" style={despedidaBgStyle}>
       <div className="max-w-3xl mx-auto text-center">
         <motion.div initial={scaleIn} whileInView={scaleShow} viewport={vpOnce} transition={t14} className="vintage-frame max-w-md mx-auto">
           <div className="aspect-[3/4] overflow-hidden">
